@@ -36,7 +36,11 @@ public class VersionParam {
             case "3.5.2":
                 MessageData = "eli";
                 break;
+            case "4.5.0":
+                MessageData = "gsk";
+                break;
             default:
+                MessageData = "gsk";
                 break;
         }
     }

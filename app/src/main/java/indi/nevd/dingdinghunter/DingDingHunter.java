@@ -20,6 +20,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedBridge.log;
 
 /**
  * Created by nevd on 8/1/2017.
@@ -34,18 +35,18 @@ public class DingDingHunter implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(final LoadPackageParam loadPackageParam) throws Throwable {
         if (loadPackageParam.packageName.equals(DINGDING_PACKAGE_NAME)){
-            Log.i(TAG, "Start Hook + " + loadPackageParam.packageName);
+            log("Start Hook + " + loadPackageParam.packageName);
             dingdingHook(loadPackageParam);
         }
     }
 
     private void dingdingHook(final LoadPackageParam loadPackageParam) throws Throwable{
         initVersion(loadPackageParam);
-        Log.i(TAG, "MessageData.class: " + VersionParam.MessageData);
+        log("MessageData.class: " + VersionParam.MessageData);
 
         // 如果VersionParam。MessageData为空，则不去hook
         if(VersionParam.MessageData.isEmpty()){
-            Log.e(TAG, "error dingding version!!!");
+            log("error dingding version!!!");
             return;
         }
 
@@ -83,7 +84,7 @@ public class DingDingHunter implements IXposedHookLoadPackage {
                     String conversationId = DingDingMsg.getConversationId(msg);
                     long sendTime = DingDingMsg.getMsgTime(msg);
 
-                    Log.i(TAG, "msg: " + mid + " ### " + content + " ### " + senderId + " ### " + senderName + " ### " + conversationId + " ### " + sendTime);
+                    log("msg: " + mid + " ### " + content + " ### " + senderId + " ### " + senderName + " ### " + conversationId + " ### " + sendTime);
 
                     Map map =  new HashMap<>();
                     map.put("mid", Long.toString(mid));
@@ -106,7 +107,7 @@ public class DingDingHunter implements IXposedHookLoadPackage {
     private void initVersion(LoadPackageParam loadPackageParam) throws PackageManager.NameNotFoundException {
         Context context = (Context) callMethod(XposedHelpers.callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread", new Object[0]), "getSystemContext", new Object[0]);
         String versionName = context.getPackageManager().getPackageInfo(loadPackageParam.packageName, 0).versionName;
-        Log.i(TAG, "Found dingding version:" + versionName);
+        log("Found dingding version:" + versionName);
         VersionParam.init(versionName);
     }
 }

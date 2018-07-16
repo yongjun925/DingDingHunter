@@ -23,7 +23,7 @@ public class RetrofitUtils {
     private NetService apiService;
     private OkHttpClient okHttpClient;
     private final static int DEFAULT_TIMEOUT = 5;
-    private final static String host = "http://xxx.xxx.com";
+    private final static String host = "http://10.200.20.68:8360";
 
     private final static String TAG = "DingDingHunter";
 
